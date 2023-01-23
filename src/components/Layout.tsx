@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Nav image={{ src: '/qmessentials-logo.svg', alt: 'QMEssentials logo', width: 80, height: 80 }} bannerText="QM Essentials" />
+        <Nav image={{ src: '/qmessentials-logo.svg', alt: 'QMEssentials logo', width: 80, height: 80 }} bannerText="QMEssentials" />
         <Content>{children}</Content>
       </main>
     </>
