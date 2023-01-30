@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import Alert from '../layout/Alert'
 import Button from '../utility/Button'
 import TextInput from '../utility/TextInput'
 
@@ -9,6 +10,12 @@ export default function Login() {
   const [userIdValidationMessage, setUserIdValidationMessage] = useState('')
   const [passwordValidationMessage, setPasswordValidationMessage] = useState('')
   const [generalErrorMessage, setGeneralErrorMessage] = useState('')
+
+  useEffect(() => {
+    setUserIdValidationMessage('')
+    setPasswordValidationMessage('')
+    setGeneralErrorMessage('')
+  }, [userId, password])
 
   const handleButtonClick = useCallback(() => {
     let failedValidation = false
@@ -54,7 +61,7 @@ export default function Login() {
               Sign In
             </Button>
           </div>
-          {generalErrorMessage ? <div>{generalErrorMessage}</div> : <></>}
+          {generalErrorMessage ? <Alert category="USER_ERROR">{generalErrorMessage}</Alert> : <></>}
         </form>
       </div>
     </>
