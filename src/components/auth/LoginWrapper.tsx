@@ -2,7 +2,7 @@ import { useAuth, useAuthDispatch } from '@/context/AuthContext'
 import { AuthState } from '@/types/auth'
 import { ReactNode, useEffect, useState } from 'react'
 import Login from './Login'
-import Spinner from './Spinner'
+import Spinner from '../utility/Spinner'
 
 export default function LoginWrapper({ children }: { children: ReactNode }) {
   const auth = useAuth()

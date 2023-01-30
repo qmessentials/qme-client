@@ -1,5 +1,5 @@
-import Layout from '@/components/Layout'
-import LoginWrapper from '@/components/LoginWrapper'
+import Layout from '@/components/layout/Layout'
+import LoginWrapper from '@/components/auth/LoginWrapper'
 import { AuthProvider } from '@/context/AuthContext'
 import '@/styles/globals.css'
 import { AppProps } from 'next/app'
