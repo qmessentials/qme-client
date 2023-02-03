@@ -30,7 +30,6 @@ export default function LoginWrapper({ children }: { children: ReactNode }) {
       })()
     }
   }, [auth.authState, authDispatch])
-  console.log(auth.authState)
   return (
     <>
       {auth.authState === AuthState.None || auth.authState === AuthState.CheckingToken ? (
