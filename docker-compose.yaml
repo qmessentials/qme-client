@@ -1,0 +1,7 @@
+services:
+  qme-client: 
+    build: .
+    environment:
+      - AUTH_ENDPOINT=http://localhost:8010
+    ports: 
+      - "3000:3000"

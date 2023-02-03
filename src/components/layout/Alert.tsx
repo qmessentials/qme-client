@@ -19,5 +19,5 @@ export default function Alert({ category, children }: AlertProps) {
         : 'bg-gray-100 border-gray-600 text-gray-600',
     [category]
   )
-  return <div className={`px-3 py-2 my-4 rounded border-2 font-bold ${classes}`}>{children}</div>
+  return <div className={`px-3 py-2 my-4 rounded border ${classes}`}>{children}</div>
 }
