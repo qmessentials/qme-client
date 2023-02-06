@@ -2,6 +2,8 @@ services:
   qme-client: 
     build: .
     environment:
+      - BASE_URL=http://localhost:3000
       - AUTH_ENDPOINT=http://localhost:8010
+      - IRON_SESSION_PASSWORD=K5BLWMhisP1GMajAHH1WJQpBhsRoQmik
     ports: 
       - "3000:3000"
