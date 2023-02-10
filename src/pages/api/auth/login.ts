@@ -1,4 +1,5 @@
 import { withSessionRoute } from '@/lib/withSession'
+import { setCachedUser } from '@/util/cache'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default withSessionRoute(async function handler(req: NextApiRequest, res: NextApiResponse<null>) {
@@ -15,8 +16,9 @@ export default withSessionRoute(async function handler(req: NextApiRequest, res:
     const userInfo = await authResponse.json()
     if (userInfo) {
       req.session.userId = userId
+      req.session.authToken = userInfo.authToken
       await req.session.save()
-      console.log(`Saved session with userId ${userId}`)
+      setCachedUser(userInfo)
       res.status(201).send(null)
     } else {
       res.status(401).send(null)

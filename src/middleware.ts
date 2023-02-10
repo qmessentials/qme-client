@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server'
 import { getIronSession } from 'iron-session/edge'
 
 export async function middleware(req: NextRequest) {
-  console.log(`Middleware called from ${req.url}`)
   const res = NextResponse.next()
   const session = await getIronSession(req, res, {
     cookieName: 'qmessentials_session',
@@ -14,8 +13,9 @@ export async function middleware(req: NextRequest) {
   })
   const { userId } = session
   console.log(`User ID is ${userId}`)
+  const redirect = () => NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`)
   if (!userId) {
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`)
+    return redirect()
   }
   return res
 }

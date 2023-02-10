@@ -1,5 +1,12 @@
+export interface Login {
+  userId: string
+  password: string
+}
+
 export interface User {
-  name: string
+  userId: string
+  givenNames: string[]
+  familyNames: string[]
   roles: string[]
 }
 
