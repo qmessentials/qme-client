@@ -34,6 +34,8 @@ export default function Login() {
       if (loginResponse.status === 201) {
         Router.push('/')
       } else {
+        console.warn(`Login of user ID '${userId}' returned status ${loginResponse.status}`)
+        setIsChecking(false)
         setGeneralErrorMessage('Login failed')
       }
     } catch (error) {

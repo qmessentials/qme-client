@@ -1,9 +1,16 @@
 services:
-  qme-client: 
+  app: 
     build: .
     environment:
       - BASE_URL=http://localhost:3000
       - AUTH_ENDPOINT=http://localhost:8010
       - IRON_SESSION_PASSWORD=K5BLWMhisP1GMajAHH1WJQpBhsRoQmik
+      - REDIS_URL=redis://redis:6379
     ports: 
       - "3000:3000"
+  redis: 
+    image: 'redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports: 
+      - "6379:6379"
