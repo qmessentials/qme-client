@@ -32,3 +32,11 @@ export async function setCachedUser(user: User) {
 export async function removeCachedUser(userId: string) {
   await setCache(userId, null)
 }
+
+export async function getCachedPermissions(userId: string): Promise<string[] | null> {
+  return await getCache(`permissions for ${userId}`)
+}
+
+export async function setCachedPermissions(userId: string, permissions: string[]) {
+  return await setCache(`permissions for ${userId}`, permissions)
+}

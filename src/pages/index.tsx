@@ -1,17 +1,55 @@
 import PageHeader from '@/components/layout/PageHeader'
 import { withSessionSsr } from '@/lib/withSession'
 import { User } from '@/types/auth'
-import { getCachedUser, setCachedUser } from '@/util/cache'
+import { getCachedPermissions, getCachedUser, setCachedPermissions, setCachedUser } from '@/util/cache'
 import Link from 'next/link'
-import { getOne as getOneUser } from '../apis/auth/userInfoForToken'
+import { getOne as getOneUser } from '../apis/auth/users'
+import { getOne as getOnePermissions } from '../apis/auth/permittedOperations'
+import MenuBox from '@/components/MenuBox'
+import { redirect } from 'next/dist/server/api-utils'
 
-export default function Home({ user }: { user: User | null }) {
+export default function Home({ user, permissions }: { user: User | null; permissions: string[] }) {
+  const userPermissions: { [key: string]: { [key: string]: boolean } } = {
+    Admin: {
+      'Create a User': false,
+    },
+    'User Management': {
+      'Change Password': true,
+      'Log Out': true,
+    },
+  }
+  for (let permission of permissions) {
+    let done = false
+    for (let category in userPermissions) {
+      if (Object.hasOwn(userPermissions[category], permission)) {
+        userPermissions[category][permission] = true
+        done = true
+        break
+      }
+    }
+    if (done) break
+  }
+
+  const permissionLinks: { [key: string]: string } = {
+    'Log Out': '/api/auth/logout',
+    'Change Password': '/auth/change-password',
+    'Create a User': '/admin/create-user',
+  }
+
   return (
     <>
       {user ? <PageHeader>Welcome, {[...user.givenNames, ...user.familyNames].join(' ')} </PageHeader> : <></>}
-      <p>
-        <Link href="/api/auth/logout">Log Out</Link>
-      </p>
+      {Object.keys(userPermissions).map((category) => (
+        <MenuBox
+          key={category}
+          title={category}
+          menuItems={Object.keys(userPermissions[category])
+            .filter((permission) => userPermissions[category][permission])
+            .map((permission) => {
+              return { text: permission, href: permissionLinks[permission] }
+            })}
+        />
+      ))}
     </>
   )
 }
@@ -19,14 +57,28 @@ export default function Home({ user }: { user: User | null }) {
 export const getServerSideProps = withSessionSsr(async function getServerSideProps({ req }) {
   let user = await getCachedUser(req.session.userId)
   if (!user) {
-    user = await getOneUser(req.session.authToken)
+    user = await getOneUser(req.session.userId, req.session.authToken)
     if (user) {
       await setCachedUser(user)
+    }
+  }
+  let permissions = await getCachedPermissions(req.session.userId)
+  if (!permissions) {
+    try {
+      permissions = await getOnePermissions(req.session.userId, req.session.authToken)
+      if (permissions) {
+        setCachedPermissions(req.session.userId, permissions)
+      }
+    } catch (error) {
+      if (error === 401) {
+        console.warn('401')
+      }
     }
   }
   return {
     props: {
       user,
+      permissions,
     },
   }
 })
