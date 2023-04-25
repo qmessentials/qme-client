@@ -7,7 +7,9 @@ export interface User {
   userId: string
   givenNames: string[]
   familyNames: string[]
+  emailAddress: string
   roles: string[]
+  isActive: boolean
 }
 
 export enum AuthState {

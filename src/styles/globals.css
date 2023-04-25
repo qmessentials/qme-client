@@ -7,3 +7,13 @@ body {
   font-family: 'Open Sans';
   padding: 0px;
 }
+
+a:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
+a {
+  text-decoration: underline;
+  color: blue;
+}

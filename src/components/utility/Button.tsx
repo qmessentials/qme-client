@@ -6,9 +6,10 @@ export interface ButtonParams {
   type?: 'submit' | 'button'
   onClick?: () => void
   disabled?: boolean
+  className?: string
 }
 
-export default function Button({ category, children, onClick, type = 'submit', disabled = false }: ButtonParams) {
+export default function Button({ category, children, onClick, type = 'submit', disabled = false, className = '' }: ButtonParams) {
   const { background, border, text, hoverBackground, hoverBorder, hoverText, disabledBackground, disabledBorder, disabledText } =
     useMemo(() => {
       switch (category) {
@@ -68,7 +69,7 @@ export default function Button({ category, children, onClick, type = 'submit', d
     }, [category])
   return (
     <button
-      className={`border ${background} ${border} ${text} ${hoverBackground} ${hoverBorder} ${hoverText} ${disabledBackground} ${disabledBorder} ${disabledText} font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
+      className={`${className} border ${background} ${border} ${text} ${hoverBackground} ${hoverBorder} ${hoverText} ${disabledBackground} ${disabledBorder} ${disabledText} font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
       type={type}
       disabled={disabled}
       onClick={onClick}
