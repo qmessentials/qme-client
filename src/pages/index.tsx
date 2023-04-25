@@ -2,16 +2,14 @@ import PageHeader from '@/components/layout/PageHeader'
 import { withSessionSsr } from '@/lib/withSession'
 import { User } from '@/types/auth'
 import { getCachedPermissions, getCachedUser, setCachedPermissions, setCachedUser } from '@/util/cache'
-import Link from 'next/link'
 import { getOne as getOneUser } from '../apis/auth/users'
 import { getOne as getOnePermissions } from '../apis/auth/permittedOperations'
 import MenuBox from '@/components/MenuBox'
-import { redirect } from 'next/dist/server/api-utils'
 
 export default function Home({ user, permissions }: { user: User | null; permissions: string[] }) {
   const userPermissions: { [key: string]: { [key: string]: boolean } } = {
     Admin: {
-      'Create a User': false,
+      'Search for Users': false,
     },
     'User Management': {
       'Change Password': true,
@@ -33,12 +31,12 @@ export default function Home({ user, permissions }: { user: User | null; permiss
   const permissionLinks: { [key: string]: string } = {
     'Log Out': '/api/auth/logout',
     'Change Password': '/auth/change-password',
-    'Create a User': '/admin/create-user',
+    'Search for Users': '/admin/users',
   }
 
   return (
     <>
-      {user ? <PageHeader>Welcome, {[...user.givenNames, ...user.familyNames].join(' ')} </PageHeader> : <></>}
+      <PageHeader>Welcome, {[...(user?.givenNames ?? []), ...(user?.familyNames ?? [])].join(' ')} </PageHeader>
       {Object.keys(userPermissions).map((category) => (
         <MenuBox
           key={category}

@@ -23,7 +23,7 @@ export default function Nav({ image, bannerText, items }: NavParams) {
   return (
     <nav className="flex items-left justify-between flex-wrap bg-gray-400 p-3">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
-        {image ? <Image src={image.src} alt={image.alt} width={image.width} height={image.height} /> : <></>}
+        <Link href="/"> {image ? <Image src={image.src} alt={image.alt} width={image.width} height={image.height} /> : <></>}</Link>
         {bannerText ? <span className="font-semibold text-3xl ml-4">{bannerText}</span> : <></>}
       </div>
       {items ? (

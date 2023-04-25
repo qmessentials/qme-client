@@ -12,6 +12,7 @@ export interface InputParams {
   validationMessage?: string
   disabled?: boolean
   required?: boolean
+  className?: string
 }
 
 export default function TextInput({
@@ -25,6 +26,7 @@ export default function TextInput({
   validationMessage,
   disabled = false,
   required = false,
+  className = '',
 }: InputParams) {
   const idOrDefault = id ?? camelCaseLabelText(label)
   const [borderColor, textColor] = useMemo(
@@ -40,7 +42,7 @@ export default function TextInput({
         id={idOrDefault}
         name={name}
         type={isPassword ? 'password' : 'text'}
-        className={`border ${borderColor} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+        className={`${className} border ${borderColor} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
         value={value}
         onChange={(e) => (onChange ? onChange(e.target.value) : () => {})}
         placeholder={placeholder}
