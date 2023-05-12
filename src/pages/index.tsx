@@ -5,6 +5,7 @@ import { getCachedPermissions, getCachedUser, setCachedPermissions, setCachedUse
 import { getOne as getOneUser } from '../apis/auth/users'
 import { getOne as getOnePermissions } from '../apis/auth/permittedOperations'
 import MenuBox from '@/components/MenuBox'
+import { redirect } from 'next/dist/server/api-utils'
 
 export default function Home({ user, permissions }: { user: User | null; permissions: string[] }) {
   const userPermissions: { [key: string]: { [key: string]: boolean } } = {
@@ -53,25 +54,40 @@ export default function Home({ user, permissions }: { user: User | null; permiss
 }
 
 export const getServerSideProps = withSessionSsr(async function getServerSideProps({ req }) {
-  let user = await getCachedUser(req.session.userId)
-  if (!user) {
-    user = await getOneUser(req.session.userId, req.session.authToken)
+  let [userCacheHit, user] = await getCachedUser(req.session.userId)
+  if (!userCacheHit) {
+    const userApiResponse = await getOneUser(req.session.userId, req.session.authToken)
+    if (userApiResponse === 'Forbidden') {
+      throw 'Unexpected forbidden response trying to retrieve current user'
+    }
+    if (userApiResponse === 'Unauthorized') {
+      req.session.destroy()
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      }
+    }
     if (user) {
       await setCachedUser(user)
     }
   }
-  let permissions = await getCachedPermissions(req.session.userId)
-  if (!permissions) {
-    try {
-      permissions = await getOnePermissions(req.session.userId, req.session.authToken)
-      if (permissions) {
-        setCachedPermissions(req.session.userId, permissions)
-      }
-    } catch (error) {
-      if (error === 401) {
-        console.warn('401')
+  let [permissionsCacheHit, permissions] = await getCachedPermissions(req.session.userId)
+  if (!permissionsCacheHit) {
+    const permissionsApiResponse = await getOnePermissions(req.session.userId, req.session.authToken)
+    if (permissionsApiResponse === 'Forbidden') {
+      throw 'Unexpected forbidden response on user permissions'
+    }
+    if (permissionsApiResponse === 'Unauthorized') {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
       }
     }
+    setCachedPermissions(req.session.userId, permissionsApiResponse)
   }
   return {
     props: {
