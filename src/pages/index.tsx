@@ -4,50 +4,19 @@ import { User } from '@/types/auth'
 import { getCachedPermissions, getCachedUser, setCachedPermissions, setCachedUser } from '@/util/cache'
 import { getOne as getOneUser } from '../apis/auth/users'
 import { getOne as getOnePermissions } from '../apis/auth/permittedOperations'
-import MenuBox from '@/components/MenuBox'
-import { redirect } from 'next/dist/server/api-utils'
+import MenuBox, { MenuBoxProps, allMenuGroups } from '@/components/MenuBox'
 
 export default function Home({ user, permissions }: { user: User | null; permissions: string[] }) {
-  const userPermissions: { [key: string]: { [key: string]: boolean } } = {
-    Admin: {
-      'Search for Users': false,
-    },
-    'User Management': {
-      'Change Password': true,
-      'Log Out': true,
-    },
-  }
-  for (let permission of permissions) {
-    let done = false
-    for (let category in userPermissions) {
-      if (Object.hasOwn(userPermissions[category], permission)) {
-        userPermissions[category][permission] = true
-        done = true
-        break
-      }
-    }
-    if (done) break
-  }
-
-  const permissionLinks: { [key: string]: string } = {
-    'Log Out': '/api/auth/logout',
-    'Change Password': '/auth/change-password',
-    'Search for Users': '/admin/users',
-  }
-
+  const menuGroups = allMenuGroups
+    .map((mg) => {
+      return { ...mg, menuItems: mg.menuItems.filter((mi) => permissions.includes(mi.text) || mi.alwaysEnabled) }
+    })
+    .filter((mg) => mg.menuItems.length > 0)
   return (
     <>
       <PageHeader>Welcome, {[...(user?.givenNames ?? []), ...(user?.familyNames ?? [])].join(' ')} </PageHeader>
-      {Object.keys(userPermissions).map((category) => (
-        <MenuBox
-          key={category}
-          title={category}
-          menuItems={Object.keys(userPermissions[category])
-            .filter((permission) => userPermissions[category][permission])
-            .map((permission) => {
-              return { text: permission, href: permissionLinks[permission] }
-            })}
-        />
+      {menuGroups.map((mg) => (
+        <MenuBox key={mg.title} title={mg.title} menuItems={mg.menuItems} />
       ))}
     </>
   )
