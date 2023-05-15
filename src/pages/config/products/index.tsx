@@ -4,12 +4,15 @@ import TD from '@/components/utility/TD'
 import TH from '@/components/utility/TH'
 import { withSessionSsr } from '@/lib/withSession'
 import { Product } from '@/types/config'
+import Link from 'next/link'
 
 export default function Products({ products }: { products: Product[] }) {
   return (
     <>
       <PageHeader>Products</PageHeader>
-
+      <p className="my-4 mx-2">
+        <Link href="products/new">Create a Product</Link>
+      </p>
       <table className="my-3 mx-2 border-collapse">
         <thead>
           <tr>
