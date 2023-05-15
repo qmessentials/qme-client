@@ -4,7 +4,7 @@ import MultiSelect from '@/components/utility/MultiSelect'
 import TextInput from '@/components/utility/TextInput'
 import { useState } from 'react'
 
-export default function CreateUser() {
+export default function NewUser() {
   const fixedRoles = ['Administrator', 'Tester']
   const [roles, setRoles] = useState<string[]>([])
   return (
