@@ -19,7 +19,7 @@ export default withSessionRoute(async function handler(req: NextApiRequest, res:
       req.session.authToken = userInfo.authToken
       await req.session.save()
       setCachedUser(userInfo)
-      res.status(201).send(null)
+      res.status(200).send(null)
     } else {
       res.status(401).send(null)
     }
