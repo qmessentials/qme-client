@@ -1,6 +1,6 @@
 import { CreateUserRequest, UserSearchCriteria } from '@/types/admin'
 import { User } from '@/types/auth'
-import { SecureApiResult, secureFetchObject, securePostObject } from '../apiUtil'
+import { SecureApiResult, secureFetchObject } from '../apiUtil'
 import { authSecureEndpoint, authSecureFetchObject, authSecurePostObject } from './authApiUtil'
 
 export async function getOne(userId: string, authToken: string): Promise<SecureApiResult<User>> {
