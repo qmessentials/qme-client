@@ -37,7 +37,7 @@ export default function NewUser() {
             onChange={setRoles}
           />
         </div>
-        <Button category="primary" className="mx-2" type="submit">
+        <Button category="primary" className="" type="submit">
           Create
         </Button>
         <Button category="default" type="button" onClick={() => history.back()}>
