@@ -1,4 +1,4 @@
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Alert from '../../components/layout/Alert'
 import Button from '../../components/utility/Button'
@@ -31,8 +31,8 @@ export default function Login() {
         method: 'post',
         body: JSON.stringify({ userId, password }),
       })
-      if (loginResponse.status === 201) {
-        Router.push('/')
+      if (loginResponse.status === 200) {
+        document.location = '/'
       } else {
         console.warn(`Login of user ID '${userId}' returned status ${loginResponse.status}`)
         setIsChecking(false)
