@@ -3,9 +3,14 @@ import { Redis } from 'ioredis'
 
 const redis = new Redis(process.env.REDIS_URL as string)
 
-async function getCache(key: string): Promise<any | null> {
+export type CacheResult<T> = [found: boolean, result: T | undefined]
+
+async function getCache<T>(key: string): Promise<CacheResult<T>> {
   const value = await redis.get(key)
-  return value ? JSON.parse(value) : null
+  if (!value) {
+    return [false, undefined]
+  }
+  return [true, JSON.parse(value)]
 }
 
 async function setCache(key: string, value: any | null) {
@@ -16,13 +21,9 @@ async function setCache(key: string, value: any | null) {
   }
 }
 
-export async function getCachedUser(userId: string): Promise<User | null> {
+export async function getCachedUser(userId: string): Promise<CacheResult<User>> {
   console.log(`Checking cache for user ID '${userId}'`)
-  const user: User | null = await getCache(userId)
-  if (!user) {
-    return null
-  }
-  return user
+  return await getCache(userId)
 }
 
 export async function setCachedUser(user: User) {
@@ -33,7 +34,7 @@ export async function removeCachedUser(userId: string) {
   await setCache(userId, null)
 }
 
-export async function getCachedPermissions(userId: string): Promise<string[] | null> {
+export async function getCachedPermissions(userId: string): Promise<CacheResult<string[]>> {
   return await getCache(`permissions for ${userId}`)
 }
 
