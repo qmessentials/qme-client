@@ -11,7 +11,7 @@ export default function Users({ users }: { users: User[] }) {
     <>
       <PageHeader>Users</PageHeader>
       <p className="my-4 mx-2">
-        <Link href="create-user">Create a User</Link>
+        <Link href="users/new">Create a User</Link>
       </p>
       <table className="my-3 mx-2 border-collapse">
         <thead>
@@ -28,7 +28,7 @@ export default function Users({ users }: { users: User[] }) {
           {users.map((user) => (
             <tr key={user.userId}>
               <TD>
-                <Link href="edit-user">{user.userId}</Link>
+                <Link href={`users/${user.userId}/edit`}>{user.userId}</Link>
               </TD>
               <TD>{user.familyNames.join(' ')}</TD>
               <TD>{user.givenNames.join(' ')}</TD>

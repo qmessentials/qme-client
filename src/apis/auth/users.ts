@@ -25,12 +25,14 @@ export async function create(createUserRequest: CreateUserRequest, authToken: st
   if (!authToken) {
     throw 'Auth token is required'
   }
-  try {
-    const createUserResponse = await authSecurePostObject(authToken, 'user', createUserRequest)
-    if (createUserResponse instanceof Response && createUserResponse.status !== 201) {
-      console.warn(`Unexpected ${createUserResponse.status} response received from create user request`)
-    }
-  } catch (error) {
-    console.error(error)
+  const createUserResponse = await authSecurePostObject(authToken, 'users', createUserRequest)
+  if (createUserResponse === 'Forbidden') {
+    throw 'Unexpected forbidden response'
+  }
+  if (createUserResponse === 'Unauthorized') {
+    return Promise.reject('Unauthorized')
+  }
+  if ((createUserResponse as Response).status !== 201) {
+    throw 'Failed to create user'
   }
 }
