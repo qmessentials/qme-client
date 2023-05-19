@@ -23,7 +23,9 @@ export default function Products({ products }: { products: Product[] }) {
         <tbody>
           {(products ?? []).map((p) => (
             <tr key={p.productCode}>
-              <TD>{p.productCode}</TD>
+              <TD>
+                <Link href={`products/${p.productCode}`}>{p.productCode}</Link>
+              </TD>
               <TD>{p.description}</TD>
             </tr>
           ))}
@@ -41,7 +43,7 @@ export const getServerSideProps = withSessionSsr(async function getServerSidePro
   if (productsApiResult === 'Unauthorized') {
     return {
       redirect: {
-        destination: '/',
+        destination: '/api/auth/logout',
         permanent: false,
       },
     }
