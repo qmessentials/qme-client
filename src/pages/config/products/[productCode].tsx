@@ -13,18 +13,11 @@ export default function ProductPage({ product }: { product: Product }) {
   return (
     <>
       <PageHeader>Product {product.productCode}</PageHeader>
-      <form action={`/api/config/products/${product.productCode}`} method="post" className="p-3">
+      <form action={`/api/config/products/${productCode}`} method="post" className="p-3">
         <div className="mb-4 sm:w-1 md:w-1/3 xl:w-1/4">
-          <TextInput
-            label="Product Code"
-            id="productCode"
-            name="productCode"
-            disabled
-            required={true}
-            value={productCode}
-            onChange={setProductCode}
-          />
+          <TextInput label="Product Code" id="productCodeDisplay" disabled required={true} value={productCode} onChange={setProductCode} />
         </div>
+        <input type="hidden" value={productCode} name="productCode" />
         <div className="mb-4 sm:w-1 md:w-2/3 xl:w-1/2">
           <TextInput
             label="Description"
