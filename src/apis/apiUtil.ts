@@ -48,9 +48,29 @@ export async function postAndGet<TPost, TResult>(input: RequestInfo | URL, postO
   return await getObjectFromResult(await fetch(input, getInitForPost(postObject)))
 }
 
+export async function securePutObject<T>(
+  authToken: string,
+  input: RequestInfo | URL,
+  obj: T,
+  keySelector: (value: T) => string
+): Promise<SecureApiResponse> {
+  const key = keySelector(obj)
+  return await secureFetch(authToken, `${input}/${key}`, getInitForPut(obj))
+}
+
 function getInitForPost<T>(obj: T): RequestInit {
   return {
     method: 'POST',
+    headers: {
+      'Content-Type': '/application/json',
+    },
+    body: JSON.stringify(obj),
+  }
+}
+
+function getInitForPut<T>(obj: T): RequestInit {
+  return {
+    method: 'PUT',
     headers: {
       'Content-Type': '/application/json',
     },
