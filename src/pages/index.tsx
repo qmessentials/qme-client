@@ -4,12 +4,15 @@ import { User } from '@/types/auth'
 import { getCachedPermissions, getCachedUser, setCachedPermissions, setCachedUser } from '@/util/cache'
 import { getOne as getOneUser } from '../apis/auth/users'
 import { getOne as getOnePermissions } from '../apis/auth/permittedOperations'
-import MenuBox, { MenuBoxProps, allMenuGroups } from '@/components/MenuBox'
+import MenuBox, { allMenuGroups } from '@/components/MenuBox'
 
 export default function Home({ user, permissions }: { user: User | null; permissions: string[] }) {
+  if (!permissions) {
+    console.warn('No permissions found')
+  }
   const menuGroups = allMenuGroups
     .map((mg) => {
-      return { ...mg, menuItems: mg.menuItems.filter((mi) => permissions.includes(mi.text) || mi.alwaysEnabled) }
+      return { ...mg, menuItems: mg.menuItems.filter((mi) => (permissions ?? []).includes(mi.text) || mi.alwaysEnabled) }
     })
     .filter((mg) => mg.menuItems.length > 0)
   return (
