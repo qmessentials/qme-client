@@ -33,7 +33,10 @@ export const allMenuGroups: MenuBoxProps[] = [
   },
   {
     title: 'Product Management',
-    menuItems: [{ text: 'Search for Products', href: '/config/products' }],
+    menuItems: [
+      { text: 'Search for Products', href: '/config/products' },
+      { text: 'Search for Tests', href: '/config/tests' },
+    ],
   },
 ]
 
