@@ -28,6 +28,26 @@ export async function secureFetchObject<T>(
   return result
 }
 
+export async function secureFetchPagedObjects<T>(
+  authToken: string,
+  input: RequestInfo | URL,
+  pageSize: number,
+  lastKey: string | null,
+  init?: RequestInit | undefined
+): Promise<SecureApiResult<T>> {
+  let newUrl: URL
+  if (input instanceof URL) {
+    newUrl = input
+  } else {
+    newUrl = new URL(input as string)
+  }
+  newUrl.searchParams.append('pageSize', `${pageSize}`)
+  if (lastKey !== null) {
+    newUrl.searchParams.append('lastKey', lastKey)
+  }
+  return await secureFetchObject<T>(authToken, newUrl, init)
+}
+
 export async function securePostObject<T>(authToken: string, input: RequestInfo | URL, obj: T): Promise<SecureApiResponse> {
   return await secureFetch(authToken, input, getInitForPost(obj))
 }

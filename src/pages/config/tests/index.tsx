@@ -1,12 +1,27 @@
-import { search } from '@/apis/config/tests'
 import PageHeader from '@/components/layout/PageHeader'
+import Button from '@/components/utility/Button'
 import TD from '@/components/utility/TD'
 import TH from '@/components/utility/TH'
-import { withSessionSsr } from '@/lib/withSession'
 import { Test } from '@/types/config'
 import Link from 'next/link'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
-export default function Tests({ tests }: { tests: Test[] }) {
+export default function Tests() {
+  const [tests, setTests] = useState<Test[]>([])
+  useEffect(() => {
+    ;(async () => {
+      const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/config/tests`)
+      const result: Test[] = await (await fetch(url)).json()
+      setTests(result)
+    })()
+  }, [])
+
+  const loadMore = async () => {
+    const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/config/tests?lastKey=${tests[tests.length - 1].testName}`)
+    const result: Test[] = await (await fetch(url)).json()
+    setTests((tests) => [...tests, ...result])
+  }
+
   return (
     <>
       <PageHeader>Tests</PageHeader>
@@ -37,25 +52,9 @@ export default function Tests({ tests }: { tests: Test[] }) {
           ))}
         </tbody>
       </table>
+      <Button onClick={loadMore} category="default">
+        Load More
+      </Button>
     </>
   )
 }
-
-export const getServerSideProps = withSessionSsr(async function getServerSideProps({ req }) {
-  const testsApiResult = await search(req.session.authToken)
-  if (testsApiResult === 'Forbidden') {
-    throw 'Unexpected forbidden response'
-  }
-  if (testsApiResult === 'Unauthorized') {
-    return {
-      redirect: {
-        destination: '/api/auth/logout',
-        permanent: false,
-      },
-    }
-  }
-  const tests: Test[] = testsApiResult ?? []
-  return {
-    props: { tests },
-  }
-})
