@@ -3,12 +3,10 @@ import { withSessionRoute } from '@/lib/withSession'
 import { Test } from '@/types/config'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-export default withSessionRoute(async function handler(req: NextApiRequest, res: NextApiResponse<Test[]>) {
+export default withSessionRoute(async function handler(req: NextApiRequest, res: NextApiResponse<Test[] | null>) {
   if (req.method === 'POST') {
     try {
       const test: Test = { ...req.body }
-      console.log(['req.body', req.body])
-      console.log(['test', test])
       const postResponse = await create(req.session.authToken, test)
       if (postResponse === 'Forbidden') {
         throw 'Unexpected forbidden response'
@@ -26,11 +24,15 @@ export default withSessionRoute(async function handler(req: NextApiRequest, res:
       throw error
     }
   } else if (req.method === 'GET') {
-    const { lastKey } = req.query
-    if (Array.isArray(lastKey)) {
-      throw 'Unexpected multiple last keys'
-    }
-    const testsApiResult = await search(req.session.authToken, 5, lastKey ?? null)
+    const { query } = req
+    const namePatternParam = (query.namePattern as string) ?? null
+    const queryUnitTypes = query.unitType ?? null
+    const selectedUnitTypesParam = queryUnitTypes === null ? null : Array.isArray(queryUnitTypes) ? queryUnitTypes : [queryUnitTypes]
+    const lastKey = (query.lastKey as string) ?? null
+    const testsApiResult = await search(req.session.authToken, 5, lastKey, {
+      namePattern: namePatternParam,
+      unitType: selectedUnitTypesParam,
+    })
     if (testsApiResult === 'Forbidden') {
       throw 'Unexpected forbidden response'
     }

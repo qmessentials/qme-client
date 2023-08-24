@@ -28,7 +28,7 @@ const defaultAuthContextInfo: AuthContextInfo = {
 const defaultAuthContextDispatch: Dispatch<AuthContextAction> = (action: AuthContextAction) => {}
 
 function authReducer(prevState: AuthContextInfo, action: AuthContextAction): AuthContextInfo {
-  console.log(action)
+  console.info(action)
   switch (action.type) {
     case 'BEGIN_CHECKING_TOKEN': {
       return { ...prevState, user: undefined, authState: AuthState.CheckingToken }

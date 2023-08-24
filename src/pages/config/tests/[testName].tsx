@@ -31,7 +31,7 @@ export default function TestPage({ test, unitTypes }: { test: Test; unitTypes: s
       }),
     })
     if (response.ok) {
-      window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/config/tests`
+      history.back()
     } else {
       console.warn(response)
       window.location.href = '/_error'

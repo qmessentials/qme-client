@@ -4,7 +4,7 @@ import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import Badge from './Badge'
 
 interface MultiSelectProps<T> {
-  label: string
+  label?: string
   id?: string
   name?: string
   placeholder?: string
@@ -27,7 +27,7 @@ export default function MultiSelect<T>({
   valueSelector,
   validationMessage,
 }: MultiSelectProps<T>) {
-  const idOrDefault = id ?? camelCaseLabelText(label)
+  const idOrDefault = id ?? (label ? camelCaseLabelText(label) : null) ?? undefined
   const [borderColor, textColor] = useMemo(
     () => (validationMessage ? ['border-red-500', 'text-red-500'] : ['border-gray-300', 'text-gray-500']),
     [validationMessage]
@@ -69,9 +69,13 @@ export default function MultiSelect<T>({
 
   return (
     <div>
-      <label className={`block ${textColor} font-bold mb-2`} htmlFor={idOrDefault}>
-        {label}
-      </label>
+      {label ? (
+        <label className={`block ${textColor} font-bold mb-2`} htmlFor={idOrDefault}>
+          {label}
+        </label>
+      ) : (
+        <></>
+      )}
       <div className="flex" ref={mainBoxRef}>
         <span
           className="border rounded-l p-2 flex-fill"
