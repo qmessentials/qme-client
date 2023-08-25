@@ -20,11 +20,12 @@ export async function configFetchObject<T>(
 export async function configFetchPagedObjects<T>(
   authToken: string,
   resource: string,
+  query: string | null,
   pageSize: number,
   lastKey: string | null,
   init?: RequestInit | undefined
 ): Promise<SecureApiResult<T>> {
-  return await secureFetchPagedObjects<T>(authToken, `${configEndpoint}/${resource}`, pageSize, lastKey, init)
+  return await secureFetchPagedObjects<T>(authToken, `${configEndpoint}/${resource}${query ? `?${query}` : ''}`, pageSize, lastKey, init)
 }
 
 export async function configPostObject<T>(authToken: string, resource: string, obj: T): Promise<SecureApiResponse> {

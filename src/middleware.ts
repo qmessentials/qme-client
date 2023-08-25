@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
     },
   })
   const { userId } = session
-  console.log(`User ID is ${userId}`)
+  console.info(`User ID is ${userId}`)
   const redirect = () => NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`)
   if (!userId) {
     return redirect()

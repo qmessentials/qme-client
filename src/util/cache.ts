@@ -22,7 +22,7 @@ async function setCache(key: string, value: any | null) {
 }
 
 export async function getCachedUser(userId: string): Promise<CacheResult<User>> {
-  console.log(`Checking cache for user ID '${userId}'`)
+  console.info(`Checking cache for user ID '${userId}'`)
   return await getCache(userId)
 }
 

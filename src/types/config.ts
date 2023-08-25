@@ -11,6 +11,11 @@ export interface Test {
   availableModifiers: string[]
 }
 
+export interface TestCriteria {
+  namePattern: string | null
+  unitType: string[] | null
+}
+
 export interface Unit {
   fullName: string
   fullNamePlural: string
